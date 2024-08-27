@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive To-Do List</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #cccbcb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card-container {
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            width: 500px;
+            height: 500px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .scroll {
+            background: url('https://img.freepik.com/free-photo/red-pen-with-spiral-notepads-laptop-cactus-plant-pot-white-background_23-2148042101.jpg') no-repeat center center;
+            /* background-size: contain; */
+            width: 400px;
+            height: 600px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .todo-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+
+        .todo-list li {
+            font-size: 18px;
+            color: #333;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .todo-list li .task {
+            flex-grow: 1;
+        }
+
+        .todo-list li .status {
+            margin-left: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            appearance: none;
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
+        }
+
+        /* Checkbox to toggle Done/Pending styles */
+        .todo-list li input[type="checkbox"] {
+            display: none; /* Hide the checkbox itself */
+        }
+
+        .todo-list li input[type="checkbox"]:checked + .task {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .todo-list li input[type="checkbox"]:checked + .task + .status {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: gray;
+            content: "Done";
+        }
+
+        .todo-list li input[type="checkbox"] + .status {
+            color: red;
+            content: "Pending";
+        }
+
+        .add-task-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .add-task-container input[type="text"] {
+            width: 80%;
+            padding: 10px; 
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .add-task-container button {
+            padding: 10px 20px;
+            border: none;
+            background-color: gray;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .add-task-container button:hover {
+            background-color: gray;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="scroll">
+            <ul class="todo-list" id="todo-list">
+                <li>
+                    <input type="checkbox" id="task1" onclick="toggleStatus(this)">
+                    <label class="task" for="task1">Go To Gym</label>
+                    <label class="status" id="status-task1" for="task1">Pending</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="task2" onclick="toggleStatus(this)">
+                    <label class="task" for="task2">Eat properly</label>
+                    <label class="status" id="status-task2" for="task2">Pending</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="task3" onclick="toggleStatus(this)">
+                    <label class="task" for="task3">Read a book</label>
+                    <label class="status" id="status-task3" for="task3">Pending</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="task4" onclick="toggleStatus(this)">
+                    <label class="task" for="task4">Work on project</label>
+                    <label class="status" id="status-task4" for="task4">Pending</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="task5" onclick="toggleStatus(this)">
+                    <label class="task" for="task5">Meditate</label>
+                    <label class="status" id="status-task5" for="task5">Pending</label>
+                </li>
+            </ul>
+        </div>
+        <div class="add-task-container">
+            <input type="text" id="new-task-input" placeholder="Add new task...">
+            <button onclick="addTask()">Add</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleStatus(checkbox) {
+            const taskId = checkbox.id;
+            const statusLabel = document.getElementById(`status-${taskId}`);
+            
+            if (checkbox.checked) {
+                statusLabel.textContent = 'Done';
+                statusLabel.style.color = 'gray';
+            } else {
+                statusLabel.textContent = 'Pending';
+                statusLabel.style.color = 'red';
+            }
+        }
+
+        function addTask() {
+            var taskInput = document.getElementById('new-task-input');
+            var taskText = taskInput.value.trim();
+
+            if (taskText === '') {
+                alert('Please enter a task');
+                return;
+            }
+
+            var todoList = document.getElementById('todo-list');
+
+            var newTask = document.createElement('li');
+            var taskId = 'task' + (todoList.children.length + 1);
+
+            newTask.innerHTML = `
+                <input type="checkbox" id="${taskId}" onclick="toggleStatus(this)">
+                <label class="task" for="${taskId}">${taskText}</label>
+                <label class="status" id="status-${taskId}" for="${taskId}">Pending</label>
+            `;
+
+            todoList.appendChild(newTask);
+            taskInput.value = '';
+        }
+    </script>
+</body>
+</html>
